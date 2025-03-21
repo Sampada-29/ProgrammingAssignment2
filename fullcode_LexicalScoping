@@ -1,0 +1,43 @@
+## Inputed x as a matrix
+makeCacheMatrix <- function(x = matrix(sample(1:100,9),3,3)) {
+  a <- NULL
+  set <- function(y) {
+    x <<- y
+    a <<- NULL
+  }
+  get <- function() x
+  setinverse <- function(solve) a <<- solve
+  getinverse <- function() a
+  list(set = set, get = get,
+       setinverse = setinverse,
+       getinverse = getinverse)
+}
+
+## Cache solve
+cacheSolve <- function(x, ...) {
+  a <- x$getinverse()
+  if(!is.null(a)) {
+    message("getting cached data")
+    return(a)
+  }
+  data <- x$get()
+  a <- solve(data, ...)
+  x$setinverse(a)
+  a
+}
+
+# Using the function for an example
+m <- diag(7, 5)
+m
+
+CachedMarix <- makeCacheMatrix(m)
+cacheSolve(CachedMarix)
+
+n <- diag(4,12)
+n
+
+CachedMarix <- makeCacheMatrix(n)
+cacheSolve(CachedMarix)
+
+cacheSolve(CachedMarix)   #getting cached data
+
